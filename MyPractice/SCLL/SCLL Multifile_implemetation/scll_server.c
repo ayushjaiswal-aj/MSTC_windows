@@ -214,7 +214,7 @@ scll_list_t* scll_array_to_list(data_t *p_array, len_t len){
     return p_new_list;
 }
 
-status_t scll_list_to_array(scll_list_t *p_list, data_t **pp_data, len_t *len){
+status_t scll_list_to_array(scll_list_t *p_list, data_t **pp_array, len_t *len){
     data_t *p_array;
     len_t list_length = scll_get_length(p_list);
     p_array = (data_t *)xmalloc(list_length * sizeof(data_t));
@@ -224,6 +224,9 @@ status_t scll_list_to_array(scll_list_t *p_list, data_t **pp_data, len_t *len){
         p_array[i] = p_run->data;
         p_run = p_run->next;
     }
+    *pp_array = p_array;
+    p_array = NULL;
+    *len = list_length;
     return (SUCCESS);
 }
 
