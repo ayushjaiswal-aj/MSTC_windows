@@ -405,7 +405,7 @@ status_t append_list(list_t *p_list1, list_t *p_list2){
     p_last_node_list1 = get_last_node(p_list1);
     p_last_node_list1->next = p_list2->next;
     p_list2->next->prev = p_last_node_list1;
-    return (TRUE);
+    return (SUCCESS);
 }
 
 status_t reverse_list(list_t *p_list){
