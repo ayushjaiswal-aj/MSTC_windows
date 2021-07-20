@@ -354,7 +354,7 @@ status_t destroy_scll(scll_list_t **pp_list){
     scll_list_t *p_list = *pp_list;
     scll_node_t *p_run = p_list->next;
     scll_node_t *p_run_next = NULL;
-    while(p_run != NULL){
+    while(p_run != p_list){
         p_run_next = p_run->next;
         free(p_run);
         p_run = p_run_next;
