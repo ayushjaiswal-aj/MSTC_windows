@@ -9,6 +9,7 @@ struct stack_sll{
 
 sll_stack_t* create_stack();
 void show_stack(sll_stack_t *p_stack);
+status_t destroy_sll_stack(sll_stack_t **pp_stack);
 status_t push(sll_stack_t *p_stack, data_t new_data);
 status_t pop(sll_stack_t *p_stack, data_t *p_data);
 status_t get_stack_top(sll_stack_t *p_stack, data_t *p_data);
@@ -38,6 +39,11 @@ int main(void){
     printf("new top of stack: %d\n", data);
 
     show_stack(p_stack);
+
+    s = destroy_sll_stack(&p_stack);
+    if(s == SUCCESS){
+        printf("stack is destroy\n");
+    }
 
     return (EXIT_SUCCESS);
 }
@@ -90,4 +96,14 @@ sll_stack_t* create_stack(){
     p_stack->p_list = create_sll();
     p_stack->size = 0;
     return (p_stack);
+}
+
+status_t destroy_sll_stack(sll_stack_t **pp_stack){
+    sll_stack_t *p_stack = *pp_stack;
+    status_t s;
+    s = sll_destroy_list(&(p_stack->p_list));
+    assert(s == SUCCESS);
+    free(p_stack);
+    *pp_stack = NULL;
+    return (SUCCESS);
 }
