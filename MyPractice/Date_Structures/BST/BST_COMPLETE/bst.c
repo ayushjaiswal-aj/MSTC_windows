@@ -53,15 +53,21 @@ bool search_bst(bst_t *p_bst, data_t search_data){
 }
 
 void inorder_r(bst_t *p_bst){
+    printf("[start]<->");
     __inorder_r (p_bst->p_root_node);
+    printf("[end]\n");
 }
 
 void preorder_r(bst_t *p_bst){
+    printf("[start]<->");
     __preorder_r(p_bst->p_root_node);
+    printf("[end]\n");
 }
 
 void postorder_r(bst_t *p_bst){
+    printf("[start]<->");
     __postorder_r(p_bst->p_root_node);
+    printf("[end]\n");
 }
 
 void inorder_nrc(bst_t *p_bst){
@@ -192,6 +198,26 @@ ret_t inorder_successor(bst_t *p_bst, data_t e_data, data_t *p_succ_data){
     return (BST_NO_SUCCESSOR);
 }
 
+ret_t preorder_successor(bst_t *p_bst, data_t e_data, data_t *p_succ_data)
+{
+    bst_node_t *pe_node = NULL;
+    bst_node_t *p_succ_node = NULL;
+
+    pe_node = search_bst_node(p_bst->p_root_node, e_data);
+    if(pe_node  == NULL)
+    {
+        return (BST_DATA_NOT_FOUND);
+    }
+
+    p_succ_node = preorder_successor_node(pe_node);
+    if(p_succ_node != NULL)
+    {
+        *p_succ_data = p_succ_node->data;
+        return (SUCCESS);
+    }
+    return (BST_NO_SUCCESSOR);
+}
+
 ret_t inorder_predecessor(bst_t *p_bst, data_t e_data, data_t *p_pred_data){
     bst_node_t *pe_node = NULL;
     bst_node_t *p_pred_node = NULL;
@@ -206,6 +232,24 @@ ret_t inorder_predecessor(bst_t *p_bst, data_t e_data, data_t *p_pred_data){
         *p_pred_data = p_pred_node->data;
         return (SUCCESS);
     }
+    return (BST_NO_PREDECESSOR);
+}
+
+ret_t preorder_predecessor(bst_t *p_bst, data_t e_data, data_t *p_pred_data){
+    bst_node_t *pe_node = NULL;
+    bst_node_t *p_pred_node = NULL;
+
+    pe_node = search_bst_nnode(p_bst->p_root_node, e_data);
+    if(pe_node == NULL){
+        return (BST_DATA_NOT_FOUND);
+    }
+
+    p_pred_node = preorder_predecessor_node(pe_node);
+    if(p_pred_node != NULL){
+        *p_pred_data = p_pred_node->data;
+        return (SUCCESS);
+    }
+    
     return (BST_NO_PREDECESSOR);
 }
 
@@ -383,6 +427,40 @@ bst_node_t *inorder_successor_node(bst_node_t *p_bst_node)
     return y;
 }
 
+bst_node_t* preorder_successor_node(bst_node_t *p_bst_node)
+{
+    bst_node_t *x = NULL;
+    bst_node_t *y = NULL;
+
+    x = p_bst_node;
+    /*case 1 : left subtree is present */
+    if(x->left != NULL)
+    {
+        return x->left;
+    }
+    /* case 2 : left subtree is absent but right sub tree is present*/
+    if (x->right != NULL)
+    {
+        return (x->right);
+    }
+    y = x->parent;
+    while(y->parent != NULL && y->right == x)
+    {
+        x = y;
+        y = y->parent;
+    }
+    return y->right;
+}
+
+bst_node_t* postorder_successor_node(bst_node_t *p_bst_node){
+    bst_node_t *x = NULL;
+    bst_node_t *p_run = NULL;
+
+    x = p_bst_node;
+    
+    
+}
+
 bst_node_t *inorder_predecessor_node(bst_node_t *p_bst_node){
     bst_node_t *x = NULL;
     bst_node_t *y = NULL;
@@ -406,6 +484,29 @@ bst_node_t *inorder_predecessor_node(bst_node_t *p_bst_node){
         y = x->parent;
     }
     return y;
+}
+
+bst_node_t* preorder_predecessor_node(bst_node_t *p_bst_node){
+    bst_node_t *x = NULL;
+    bst_node_t *y = NULL;
+    bst_node_t *p_run = NULL;
+    
+    x = p_bst_node;
+    /* case 1 : if x is left child of its parent the parent is predecessor node */
+    if(x->parent->left == x){
+        return (x->parent);
+    }
+
+    /* case 2 : if x is right child then max node of parents left sub tree is the predecessor node */
+    if(x->parent->right == x){
+        if(x->parent->left != NULL){
+            p_run = x->parent->left; 
+            while(p_run->right != NULL){
+                p_run = p_run->right;
+            }
+            return p_run;
+        }
+    }
 }
 
 void __inorder_r(bst_node_t *p_root_node){

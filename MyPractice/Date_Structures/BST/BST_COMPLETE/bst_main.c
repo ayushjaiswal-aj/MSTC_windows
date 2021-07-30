@@ -5,7 +5,7 @@
 
 int main(void){
     bst_t *p_bst = NULL;
-    data_t d_array[] = {100, 50, 70, 150, 25, 75, 125, 175, 65, 130};
+    data_t d_array[] = {500, 250, 750, 150, 600, 350, 400, 450, 650, 850, 900, 300, 370};
     data_t data;
     ret_t ret;
     int i;
@@ -41,12 +41,16 @@ int main(void){
         printf("min in bst = %d\n", data);
     }
 
-    if(inorder_successor(p_bst, 25, &data) == SUCCESS){
-        printf("inorder successor of 25 is = %d\n", data);
+    if(inorder_successor(p_bst, 250, &data) == SUCCESS){
+        printf("inorder successor of 250 is = %d\n", data);
     }
 
-    if(inorder_predecessor(p_bst, 25, &data) == SUCCESS){
-        printf("inorder_predecessor of 25 is = %d\n", data);
+    if(preorder_successor(p_bst, 450, &data) == SUCCESS){
+        printf("preoderd successor of 450 is = %d\n", data);
+    }
+
+    if(inorder_predecessor(p_bst, 250, &data) == SUCCESS){
+        printf("inorder_predecessor of 250 is = %d\n", data);
     }
 
     if(remove_bst(p_bst, 70) == SUCCESS){

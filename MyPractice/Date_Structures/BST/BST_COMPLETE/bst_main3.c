@@ -293,6 +293,8 @@ ret_t remove_bst_extended(bst_t *p_bst, data_t r_data)
     }
 
     z = p_bst_delete_node;
+
+    /* case 1 : Left subtree is absent */
     if(z->left == NULL)
     {
         if(z->parent == NULL)
@@ -312,6 +314,7 @@ ret_t remove_bst_extended(bst_t *p_bst, data_t r_data)
             z->right->parent = z->parent;
         }
     }
+    /* case 2 : Right subtree is absent */
     else if
     {
         if(z->parent == NULL)
@@ -331,6 +334,7 @@ ret_t remove_bst_extended(bst_t *p_bst, data_t r_data)
             z->left->parent = z->parent;
         }
     }
+    /* case 3 : both subtrees are present */
     else 
     {
         y = z->right; 
@@ -427,7 +431,7 @@ void __postorder_r(bst_node_t *p_root_node)
     printf("[%d]<->", p_root_node->data);
 }
 
-bst_node_t* get_bst_successor_node(bst_node_t *p_bst_node)
+bst_node_t* get_bst_inorder_successor_node(bst_node_t *p_bst_node)
 {
     bst_node_t *x = NULL;
     bst_node_t *y = NULL;
@@ -455,7 +459,33 @@ bst_node_t* get_bst_successor_node(bst_node_t *p_bst_node)
     return (y);
 }
 
-bst_node_t* get_bst_predecessor_node(bst_node_t *p_bst_node)
+bst_node_t* get_bst_preorder_succesor_node(bst_node_t *p_bst_node)
+{
+    bst_node_t *x = NULL;
+    bst_node_t *y = NULL;
+    bst_node_t *p_run = NULL;
+
+    x = p_bst_node;
+    /*case 1 : left subtree is present */
+    if(x->left != NULL)
+    {
+        return x->left;
+    }
+    /* case 2 : left subtree is absent but right sub tree is present*/
+    else if (x->right != NULL)
+    {
+        return (x->right;)
+    }
+    y = x->parent;
+    while(y->parent != NULL && y->right == x)
+    {
+        x = y;
+        y = y->parent;
+    }
+    return y->right;
+}
+
+bst_node_t* get_bst_inorder_predecessor_node(bst_node_t *p_bst_node)
 {
     bst_node_t *x = NULL;
     bst_node_t *y = NULL;

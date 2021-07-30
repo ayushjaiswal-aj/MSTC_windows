@@ -74,8 +74,8 @@ void __inorder_r(bst_node_t *p_root_node);
 void __preorder_r(bst_node_t *p_root_node);
 void __postorder_r(bst_node_t *p_root_node);
 
-bst_node_t* get_bst_successor_node(bst_node_t *p_bst_node);
-bst_node_t* get_bst_predecessor_node(bst_node_t *p_bst_node);
+bst_node_t* get_bst_inorder_successor_node(bst_node_t *p_bst_node);
+bst_node_t* get_bst_inorder_predecessor_node(bst_node_t *p_bst_node);
 bst_node_t* search_bst_node(bst_node_t *p_root_node);
 
 void __destroy_bst_r(bst_t **pp_bst);
