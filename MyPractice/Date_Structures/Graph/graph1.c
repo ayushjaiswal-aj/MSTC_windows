@@ -6,8 +6,8 @@
 #define FAILURE 0
 #define G_INVALID_VERTEX 2
 #define G_INVALID_EDGE 3
-#define G_EDGE_EXIT 4
-#define F_VERTEX_EXIT 5
+#define G_EDGE_EXIST 4
+#define G_VERTEX_EXIST 5
 
 /* typedefs */
 typedef int vertex_t;
@@ -32,7 +32,7 @@ struct vnode
     hlist_t *ph_head;
     struct vnode *prev;
     struct vnode *next;
-}
+};
 
 struct edge
 {
@@ -79,15 +79,66 @@ status_t h_insert_end(hlist_t *ph_list, vertex_t v);
 /* hlist management - internal */
 void h_generic_insert(hnode_t *ph_beg, hnode_t *ph_mid, hnode_t *ph_end);
 void h_generic_delete(hnode_t *ph_node);
-vnode_t* h_search_node(hlist_t *ph_list, vertex_t v);
-vnode_t* h_get_node(vertex_t v);
+hnode_t* h_search_node(hlist_t *ph_list, vertex_t v);
+hnode_t* h_get_node(vertex_t v);
 
 /* auxillary routines */
 void* xcalloc(size_t nr_elements, size_t size_per_elements);
 
 int main(void)
 {
+    edge_t E[] = {
+        {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6},
+        {6, 7}, {7, 1}, {1, 8}, {8, 2}, {8, 7},
+        {6, 8}, {8, 9}, {5, 9}, {9, 3}, {4, 9}
+    };
 
+    vertex_t V[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+    graph_t *g = NULL;
+    int i;
+    status_t status;
+
+    g = create_graph();
+    assert(g);
+
+    for(i = 0; i<sizeof(V)/ sizeof(V[0]); i ++)
+    {
+        status = add_vertex(g, V[i]);
+        assert(status == SUCCESS);
+    }
+
+    for (i = 0; i< sizeof(E)/sizeof(E[0]); i++)
+    {
+        status = add_edge(g, E[i].v_start, E[i].v_end);
+        assert(status == SUCCESS);
+    }
+
+    show_graph(g, "initial state: ");
+
+    status = add_vertex(g, 10);
+    assert(status  == SUCCESS);
+
+    status = add_edge(g, 4, 10);
+    assert(status == SUCCESS);
+
+    status = add_edge(g, 5, 10);
+    assert(status == SUCCESS);
+
+    show_graph(g, "After adding, v{10}, e(4, 10), e(5, 10)");
+
+    status = remove_edge(g, 1, 7);
+    assert(status == SUCCESS);
+
+    status = remove_vertex(g, 8);
+    assert(status == SUCCESS);
+
+    show_graph (g, "after removing e(1, 7), v(8)");
+
+    status = destroy_graph(g);
+    assert(status == SUCCESS);
+    g = NULL;
+    return EXIT_SUCCESS;
 }
 
 /* graph management - interface routines */
@@ -102,14 +153,15 @@ void show_graph(graph_t *g, const char *msg)
     pv_run = g->pv_head->next;
     while(pv_run != g->pv_head)
     {
-        printf("[%d]\t", p_run->v);
+        printf("[%d]\t", pv_run->v);
         ph_run = pv_run->ph_head->next;
-        while(ph_run != pv_run->ph->head)
+        while(ph_run != pv_run->ph_head)
         {
             printf("[%d]<->", ph_run->v);
             ph_run = ph_run->next;
         }
         pv_run = pv_run->next;
+        printf("[end]\n");
     }
 }
 
@@ -130,7 +182,7 @@ status_t add_vertex(graph_t *g, vertex_t v)
 
     if(pv_node != NULL)
     {
-        return (G_VERTEX_EXITS);
+        return (G_VERTEX_EXIST);
     }
 
     v_insert_end(g->pv_head, v);
@@ -139,13 +191,13 @@ status_t add_vertex(graph_t *g, vertex_t v)
     return (SUCCESS);
 }
 
-status_t add_edge(graph_t *g, vertex_t v_start, vertex_t e_vertex)
+status_t add_edge(graph_t *g, vertex_t v_start, vertex_t v_end)
 {
     vnode_t *pv_start = NULL;
     vnode_t *pv_end = NULL;
     hnode_t *ph_start = NULL;
     hnode_t *ph_end = NULL;
-    status s;
+    status_t s;
 
     pv_start = v_search_node(g->pv_head, v_start);
     if(pv_start == NULL)
@@ -160,7 +212,7 @@ status_t add_edge(graph_t *g, vertex_t v_start, vertex_t e_vertex)
 
     if(ph_start != NULL && ph_end != NULL)
     {
-        return (G_EDGE_EXIT);
+        return (G_EDGE_EXIST);
     }
 
     assert(ph_start == NULL && ph_end == NULL);
@@ -204,7 +256,7 @@ status_t remove_edge(graph_t *g, vertex_t v_start, vertex_t v_end)
     }
 
     h_generic_delete(ph_start);
-    h_generic_insert(ph_end);
+    h_generic_delete(ph_end);
 
     g->nr_edges --;
 
@@ -235,7 +287,7 @@ status_t remove_vertex(graph_t *g, vertex_t v)
         h_generic_delete(ph_node);
         h_generic_delete(ph_run);
 
-        g->nr_edged --;
+        g->nr_edges--;
         ph_run = ph_run_next;
     }
     free(pv_node->ph_head);
@@ -341,8 +393,8 @@ vnode_t* v_get_node(vertex_t v)
     pv_node = (vnode_t*)xcalloc(1, sizeof(vnode_t));
     pv_node->v = v;
     pv_node->ph_head = h_create_list();
-    pn_node->next = NULL;
-    pn_node->prev = NULL;
+    pv_node->next = NULL;
+    pv_node->prev = NULL;
 }
 
 /* hlist management - interface */
