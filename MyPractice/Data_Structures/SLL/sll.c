@@ -61,10 +61,12 @@ list_t *array_to_list(data_t *p_array, len_t len);
 
 status_t append_list(list_t *p_list1, list_t *p_list2);
 status_t reverse_list(list_t *p_list);
+status_t reverse_list_recurrsive(list_t *p_list);
 
 status_t destroy_list(list_t **p_list);
 
 /* list auxilary routines */
+void __recursive_reverse(node_t *p_curr, node_t *p_prev);
 void generic_insert(node_t *p_beg, node_t *p_mid, node_t *p_end);
 void generic_delete(node_t *p_node_prev, node_t *p_delete_node);
 node_t *get_list_node(data_t new_data);
@@ -171,6 +173,15 @@ int main (void){
     s = append_list(p_list1, p_list2);
     assert(s == SUCCESS);
     show_list(p_list1, "list2 is appended to list1: ");
+
+    show_list(p_list, "list before reversing");
+    s = reverse_list(p_list);
+    assert(s == SUCCESS);
+    show_list(p_list, "list after reversing: ");
+
+    s = reverse_list_recurrsive(p_list);
+    assert(s == SUCCESS);
+    show_list(p_list, "list after recursive reversing");
 
     destroy_list(&p_list);
     destroy_list(&p_list1);
@@ -423,10 +434,36 @@ status_t append_list(list_t *p_list1, list_t *p_list2){
     node_t *p_run = NULL;
     p_run = get_last_node(p_list1);
     p_run->next = p_list2->next;
+    free(p_list2);
+    p_list2 = NULL;
     return (SUCCESS);
 }
 
+status_t reverse_list(list_t *p_list){
+    node_t *p_run = NULL;
+    node_t *p_run_next = NULL;
+    node_t *p_new_node = NULL;
+    node_t *p_last_node = NULL;
+    p_last_node = get_last_node(p_list);
+    p_new_node = p_list->next;
+    p_list->next = p_list->next->next;
+    p_run = p_list->next;
+    p_last_node->next = p_new_node;
+    p_new_node->next = NULL;
+    while(p_run != p_last_node){
+        p_run_next = p_run->next;
+        generic_insert(p_last_node, p_run, p_new_node);
+        p_new_node = p_run;
+        p_run = p_run_next;
+    }
+    p_list->next = p_last_node;
+    return (SUCCESS);
+}
 
+status_t reverse_list_recurrsive(list_t *p_list){
+    __recursive_reverse(p_list, p_list->next, p_list->next->next);
+    return (SUCCESS);
+}
 
 void show_list(list_t *p_list, const char *msg){
     node_t *p_run = p_list->next;
@@ -478,6 +515,17 @@ node_t* get_last_node(list_t *p_list){
         p_run = p_run->next;
     }
     return (p_run);
+}
+
+void __recursive_reverse(list_t *p_list, node_t *p_curr, node_t *p_next){
+    if(p_next == NULL){
+        return;
+    }
+    p_list->next = p_next;
+    p_curr->next = NULL;
+    __recursive_reverse(p_list, p_next, p_next->next);
+    p_next->next = p_curr;
+    
 }
 
 void generic_insert(node_t *p_node_beg, node_t *p_node_mid, node_t *p_node_end){
