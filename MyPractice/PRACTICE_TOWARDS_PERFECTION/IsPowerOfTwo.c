@@ -8,10 +8,11 @@ bool isPowerOfTwo(int n);
 bool isPowerOfTwoPro(int n);
 
 int main(void){
-    int n;
+    unsigned int n;
     printf("enter number: ");
-    scanf("&n");
+    scanf("%u", &n);
 
+    printf("using log2(n) function\n");
     if(isPowerOfTwo(n)){
         printf("%d is power of 2\n", n);
     }
@@ -19,6 +20,7 @@ int main(void){
         printf("%d is not a power of 2\n", n);
     }
     
+    printf("using and operation\n");
     if(isPowerOfTwoPro(n)){
         printf("%d is power of 2\n", n);
     }
@@ -30,7 +32,7 @@ int main(void){
 }
 
 bool isPowerOfTwo(int n){
-    return (ceil(log(n, 2)) == floor(log(n, 2)))    
+    return (ceil(log2(n)) == floor(log2(n)));
 }
 
 bool isPowerOfTwoPro(int n){
