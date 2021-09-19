@@ -43,14 +43,17 @@ status_t factorial(int n){
     int *res = (int*)malloc(sizeof(int) * MAX);
     int i = 0, j = n;
     int *res_size = (int*)malloc(sizeof(int) * 1);
-    while(j != 0){
+    while(1){
         res[i] = j % 10;
         i++;
         j = j/10;
+        if(j == 0){
+            break;
+        }
     }
     *res_size = i;
     j = n-1;
-    while(j != 0){
+    while(j > 0){
         multiply(res, res_size, j);
         j--;
     }
