@@ -2,15 +2,17 @@
 #include <stdlib.h>
 #include <math.h>
 
-int SumUniqueElements(int *arr, int size){
+int SumUniqueElements(int *arr, int length){
     int i, j;
     int sum = 0;
     int repeat_flag;
-    for(i = 0; i < size; i++){
+    for(i = 0; i < length; i++){
         repeat_flag = 0;
-        for(j=0; j<i; j++){
-            if(arr[i] == arr[j]){
-                repeat_flag = 1;
+        for(j=0; j<length; j++){
+            if(i != j){
+                if(arr[i] == arr[j]){
+                    repeat_flag = 1;
+                }
             }
         }
         if(repeat_flag == 1){
