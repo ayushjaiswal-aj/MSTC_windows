@@ -41,7 +41,7 @@ status_t merge(data_t *array, index_t l, index_t m, index_t n){
         left[i] = array[l + i];
     }
     for(i = 0; i<n2; i++){
-        right[i] = array[m + i];
+        right[i] = array[m + i + 1];
     }
 
     i = 0;
