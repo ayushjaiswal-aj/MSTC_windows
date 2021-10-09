@@ -59,13 +59,13 @@ status_t merge(data_t *array, index_t l, index_t m, index_t n){
             k++;
         }
     }
-    if(i < n1){
+    while(i < n1){
         array[k] = left[i];
         i++;
         k++;
     }
     
-    if(j < n2){
+    while(j < n2){
         array[k] = right[j];
         j++;
         k++;
