@@ -16,8 +16,14 @@ class Fraction{
         cout << "numerator: " << numerator << " " << "denominator: " << denominator << endl;
     }
 
+    void simplify(){
+        int gcd = get_gcd(numerator, denominator);
+        numerator = numerator / gcd;
+        denominator = denominator / gcd;
+    }
+
     void add(Fraction f2){
-        int lcm = this->denominator * f2. denominator;
+        int lcm = get_lcm(denominator, f2.denominator);
         int x = lcm / denominator;
         int y = lcm / f2.denominator;
 
@@ -25,6 +31,18 @@ class Fraction{
 
         numerator = num;
         denominator = lcm; 
+    }
+
+    private:
+    int get_lcm(int a, int b){
+        return (a * b)/get_gcd(a, b);
+    }
+
+    int get_gcd(int a, int b){
+        if(a == 0){
+            return b;
+        }
+        return get_gcd(b % a, a);
     }
 };
 
@@ -36,6 +54,11 @@ int main(void){
     f2.display();
 
     f1.add(f2);
+    cout << "adding two fractions: " << endl;
+    f1.display();
+
+    f1.simplify();
+    cout << "after simplifying the fraction: " << endl;
     f1.display();
 
     return 0;
