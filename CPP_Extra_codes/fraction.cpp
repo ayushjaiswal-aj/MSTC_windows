@@ -33,6 +33,17 @@ class Fraction{
         denominator = lcm; 
     }
 
+    void sub(Fraction f2){
+        int lcm = get_lcm(denominator, f2.denominator);
+        int x = lcm / denominator;
+        int y = lcm / f2.denominator;
+
+        int num = (x * this->numerator) - (y * f2.numerator);
+
+        numerator = num;
+        denominator = lcm;
+    }
+
     private:
     int get_lcm(int a, int b){
         return (a * b)/get_gcd(a, b);
@@ -55,6 +66,14 @@ int main(void){
 
     f1.add(f2);
     cout << "adding two fractions: " << endl;
+    f1.display();
+
+    f1.simplify();
+    cout << "after simplifying the fraction: " << endl;
+    f1.display();
+
+    f1.sub(f2);
+    cout << "after subtracting the fractions: " << endl;
     f1.display();
 
     f1.simplify();
