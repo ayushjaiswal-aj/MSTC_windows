@@ -7,10 +7,6 @@
  * };
  */
 
-
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -48,6 +44,8 @@ int* rightSideView(struct TreeNode* root, int* returnSize){
     int *retArray = NULL;
     
     retArray = (int *)malloc(sizeof(int) * 100);
+    count = 0;
+    maxLevel = 0;
     rightViewHelper(root, retArray, 1);
     *returnSize = count;
     return retArray;
